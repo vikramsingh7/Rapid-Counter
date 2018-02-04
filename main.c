@@ -9,7 +9,7 @@
 int main(int args, char **argv){
 
   
-  int segments = 2; // Number files to break the main file ito
+  int segments = 10; // Number files to break the main file ito
 // It gives us the size of file total number of characters
   struct stat st;
   stat("just.txt", &st); 
