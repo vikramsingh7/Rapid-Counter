@@ -14,6 +14,7 @@ int fCounter = 0;
 int finalSum = 0;
 
 void *counter(void *arg){
+clock_t begin = clock();
 fCounter++;
 char arr[range];
 
@@ -39,10 +40,14 @@ if(fCounter == -5){
 printf("%i" , threadNumber);
 }
 
+clock_t end = clock();
+double timeS = (double)(end - begin) / CLOCKS_PER_SEC;
 if(fCounter == 1 || fCounter ==4 || fCounter == 16){
-printf("Words in Thread %i are %i \n", fCounter, wordC);
+printf("Words Counted in Thread %i are %i \n", fCounter, wordC);
+printf("Performance: %f \n" , timeS);
 }
 startFrom = range*fCounter;
+
 pthread_exit(0);
 }
 
