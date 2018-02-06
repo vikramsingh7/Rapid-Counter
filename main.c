@@ -6,53 +6,60 @@
 #include<sys/stat.h>
 
 
-int finalChars = 0;
+
+
+int startFrom = 0;
+int range = 0;
 int fCounter = 0;
+int finalSum = 0;
 
 void *counter(void *arg){
 fCounter++;
+char arr[range];
 
 int *ar = (int* ) arg;
-int numChars = *ar;
-int limit =0;
-limit = numChars*fCounter;
+int threadNumber = *ar;
+printf( "The threadnumber is %i \n" , threadNumber);
+FILE *ob = fopen("MAINTAINERS.txt" , "r");
 
 
-int pre = limit - finalChars;
+fseek(ob, startFrom, SEEK_SET);
 
-FILE *ob = fopen("just.txt" , "r");
+fread(arr,1, range, ob);
 
-printf("Start from %i \n" , pre);
-printf( "Upto %i \n" ,finalChars);
+int tell = ftell(ob);
+printf(" Ftell %i \n" ,tell);
+for(int i=0; i<range; i++){
 
-
-fseek(ob ,  6 , SEEK_SET);
-
-for(int i=0; i<finalChars; i++){
-char c = getc(ob);
-printf("%c" , c);
+printf("%c " , arr[i]);
 }
+
+
+startFrom = range*fCounter;
+
 pthread_exit(0);
 }
 
 
 int main(){
+
       int segments = 4; // Number files to break the main file into
       pthread_t tid[segments];
       int args;
 
 
        struct stat st;
-       stat("just.txt", &st); 
+       stat("MAINTAINERS.txt", &st); 
        int size = st.st_size; // Number of Chars in main FILE
        int numOfChars = size/segments;
-    printf(" Size of file %i \n " ,size);
-    printf( "Num chars %i \n " ,numOfChars);
       
-       finalChars = numOfChars;
-      args = numOfChars;
+       printf(" Size of file %i \n " ,size);
+       printf( "Num chars %i \n " ,numOfChars);
+      
+       range = numOfChars;
+     
    for(int i=0; i<segments; i++){
-      
+      args++;
    pthread_create(&tid[i], NULL, counter, &args);
 
    }
