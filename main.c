@@ -19,31 +19,37 @@ char arr[range];
 
 int *ar = (int* ) arg;
 int threadNumber = *ar;
-printf( "The threadnumber is %i \n" , threadNumber);
+int wordC = 0;
+//printf( "The threadnumber is %i \n" , threadNumber);
 FILE *ob = fopen("MAINTAINERS.txt" , "r");
 
 
 fseek(ob, startFrom, SEEK_SET);
 
 fread(arr,1, range, ob);
-
-int tell = ftell(ob);
-printf(" Ftell %i \n" ,tell);
 for(int i=0; i<range; i++){
-
-printf("%c " , arr[i]);
+char c = arr[i];
+if(c == ' '){
+wordC++;
+finalSum++;
+}
 }
 
+if(fCounter == -5){
+printf("%i" , threadNumber);
+}
 
+if(fCounter == 1 || fCounter ==4 || fCounter == 16){
+printf("Words in Thread %i are %i \n", fCounter, wordC);
+}
 startFrom = range*fCounter;
-
 pthread_exit(0);
 }
 
 
-int main(){
+int main(int argx , char **argv){
 
-      int segments = 4; // Number files to break the main file into
+      int segments = atoi(argv[1]); // Number files to break the main file into
       pthread_t tid[segments];
       int args;
 
@@ -53,8 +59,8 @@ int main(){
        int size = st.st_size; // Number of Chars in main FILE
        int numOfChars = size/segments;
       
-       printf(" Size of file %i \n " ,size);
-       printf( "Num chars %i \n " ,numOfChars);
+       //printf(" Size of file %i \n " ,size);
+       //printf( "Num chars %i \n " ,numOfChars);
       
        range = numOfChars;
      
@@ -67,6 +73,8 @@ int main(){
    for(int j=0; j<segments; j++){
    pthread_join(tid[j], NULL);
    }
+
+ printf("Total number of words are %i: ", finalSum);
 
    exit(0);
 }
